@@ -259,6 +259,41 @@ Remove any leading `;`, save the file, and restart Apache.
 This project is developed for educational and learning purposes. You are free to modify and extend it for personal or academic use.
 Github link:
 https://github.com/Maira-svg/INTERNGROW-AI-TRACK-PROJECT
+# 🗣️ Guftagu — AI Chatbot (OpenRouter)
+
+Guftagu ek simple aur elegant AI chatbot hai jo **OpenRouter API** ke zariye kaam karta hai. Yeh multiple AI models ko support karta hai, including Claude, GPT-4, Gemini, aur free open-source models.
+
+![Guftagu Chatbot](https://img.shields.io/badge/version-1.0.0-blue)
+![OpenRouter](https://img.shields.io/badge/OpenRouter-API-orange)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+---
+
+## ✨ Features
+
+- 🤖 **Multiple AI Models** — Claude, GPT-4, Gemini, Llama, Mistral aur bhi
+- 🔑 **OpenRouter Integration** — Ek hi API key se sab models
+- 💬 **Real-time Chat** — Instant responses with typing indicator
+- 🌙 **Dark Theme** — Eye-friendly design
+- 📱 **Responsive** — Mobile aur desktop dono par kaam kare
+- 💾 **Local Storage** — API key aur model preference save hoti hai
+- 🧹 **Clear History** — Nayi guftagu shuru karne ka option
+
+---
+
+
+<img width="955" height="537" alt="image" src="https://github.com/user-attachments/assets/6d4f7b7b-4693-4508-b166-eb0f212e4330" />
+
+
+---
+
+## 🛠️ Technologies Used
+
+- **HTML5** — Structure
+- **CSS3** — Styling (Dark theme, responsive)
+- **JavaScript (Vanilla)** — Logic and API calls
+- **OpenRouter API** — AI model gateway
+-
 
 ---
 
