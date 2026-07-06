@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guftagu — AI Chatbot (OpenRouter)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: #14151C;
+    font-family: 'Inter', sans-serif;
+    color: #EDE8DC;
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 760px;
+    margin: 0 auto;
+    background: #1A1C25;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 24px;
+    border-bottom: 1px solid #2A2D38;
+    flex-shrink: 0;
+  }
+
+  .header .mark {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: #C9A24C;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: #1A1C25;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 20px;
+    margin: 0;
+    color: #F2EEE3;
+    letter-spacing: 0.2px;
+  }
+
+  .header p {
+    margin: 0;
+    font-size: 12px;
+    color: #8C8A81;
+  }
+
+  .header-right { margin-left: auto; display: flex; gap: 8px; }
+
+  .clear-btn, .key-btn, .model-btn {
+    background: transparent;
+    border: 1px solid #383B47;
+    color: #A8A59B;
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .clear-btn:hover, .key-btn:hover, .model-btn:hover { border-color: #C9A24C; color: #C9A24C; }
+
+  .key-banner, .model-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: #2A2312;
+    border-bottom: 1px solid #3A3016;
+    font-size: 13px;
+    color: #D8B863;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .key-banner input, .model-banner select {
+    flex: 1;
+    background: #1A1C25;
+    border: 1px solid #3A3016;
+    color: #EDE8DC;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    min-width: 150px;
+  }
+  .key-banner button, .model-banner button {
+    background: #C9A24C;
+    color: #201A0C;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .chat-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  .empty-state {
+    margin: auto;
+    text-align: center;
+    color: #6E6C63;
+    max-width: 360px;
+  }
+  .empty-state .mark-lg {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: #23262F;
+    border: 1px solid #2E313D;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-size: 24px;
+    color: #C9A24C;
+    margin: 0 auto 16px;
+  }
+  .empty-state h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    color: #D8D4C7;
+    font-size: 18px;
+    margin: 0 0 8px;
+  }
+  .empty-state p { font-size: 14px; line-height: 1.6; margin: 0; }
+
+  .row { display: flex; }
+  .row.user { justify-content: flex-end; }
+  .row.assistant { justify-content: flex-start; }
+
+  .bubble {
+    max-width: 78%;
+    padding: 12px 16px;
+    border-radius: 14px;
+    font-size: 15px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  .row.user .bubble {
+    background: #C9A24C;
+    color: #201A0C;
+    border-radius: 14px 14px 4px 14px;
+  }
+
+  .row.assistant .bubble {
+    background: #23262F;
+    color: #EDE8DC;
+    border: 1px solid #2E313D;
+    border-radius: 14px 14px 14px 4px;
+  }
+
+  .typing {
+    display: flex;
+    gap: 4px;
+    padding: 14px 16px;
+  }
+  .typing span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #6E6C63;
+    animation: bounce 1.2s infinite ease-in-out;
+  }
+  .typing span:nth-child(2) { animation-delay: 0.15s; }
+  .typing span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  .input-bar {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 16px 24px 22px;
+    border-top: 1px solid #2A2D38;
+    flex-shrink: 0;
+  }
+
+  #userInput {
+    flex: 1;
+    resize: none;
+    background: #23262F;
+    border: 1px solid #2E313D;
+    color: #EDE8DC;
+    border-radius: 12px;
+    padding: 12px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    max-height: 140px;
+    outline: none;
+  }
+  #userInput:focus { border-color: #C9A24C; }
+  #userInput::placeholder { color: #6E6C63; }
+
+  #sendBtn {
+    background: #C9A24C;
+    color: #201A0C;
+    border: none;
+    border-radius: 12px;
+    width: 44px; height: 44px;
+    flex-shrink: 0;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #sendBtn:hover { background: #DAB35F; }
+  #sendBtn:disabled { background: #3A3A38; color: #6E6C63; cursor: not-allowed; }
+
+  .chat-area::-webkit-scrollbar { width: 8px; }
+  .chat-area::-webkit-scrollbar-thumb { background: #2E313D; border-radius: 4px; }
+
+  @media (max-width: 500px) {
+    .header { flex-wrap: wrap; }
+    .header-right { margin-left: 0; width: 100%; justify-content: flex-start; }
+    .key-banner, .model-banner { flex-direction: column; align-items: stretch; }
+    .key-banner button, .model-banner button { align-self: flex-end; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <div class="mark">G</div>
+    <div>
+      <h1>Guftagu</h1>
+      <p>AI chatbot — OpenRouter</p>
+    </div>
+    <div class="header-right">
+      <button class="model-btn" id="modelBtn">🤖 Model</button>
+      <button class="key-btn" id="keyBtn">🔑 API Key</button>
+      <button class="clear-btn" id="clearBtn">🔄 Nayi guftagu</button>
+    </div>
+  </div>
+
+  <div class="key-banner" id="keyBanner">
+    <span>🔑</span>
+    <input type="password" id="apiKeyInput" placeholder="Apni OpenRouter API key yahan paste karein (sk-or-v1-...)" value="">
+    <button id="saveKeyBtn">Save</button>
+  </div>
+
+  <div class="model-banner" id="modelBanner">
+    <span>🤖</span>
+    <select id="modelSelect">
+      <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
+      <option value="anthropic/claude-3-haiku">Claude 3 Haiku</option>
+      <option value="openai/gpt-4o">GPT-4o</option>
+      <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+      <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (Free)</option>
+      <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (Free)</option>
+      <option value="meta-llama/llama-3.2-3b-instruct:free">Llama 3.2 3B (Free)</option>
+      <option value="microsoft/phi-3.5-mini-128k:free">Phi-3.5 Mini (Free)</option>
+    </select>
+    <button id="saveModelBtn">Set</button>
+  </div>
+
+  <div class="chat-area" id="chatArea">
+    <div class="empty-state" id="emptyState">
+      <div class="mark-lg">G</div>
+      <h2>Kuch bhi puchein</h2>
+      <p>Guftagu AI chatbot hai jo OpenRouter ke zariye kaam karta hai. Pehle upar API key daalein aur model select karein.</p>
+    </div>
+  </div>
+
+  <div class="input-bar">
+    <textarea id="userInput" rows="1" placeholder="Apna sawal likhein..."></textarea>
+    <button id="sendBtn" aria-label="Bhejein">➤</button>
+  </div>
+</div>
+
+<script>
+  const chatArea = document.getElementById('chatArea');
+  const emptyState = document.getElementById('emptyState');
+  const userInput = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const keyBtn = document.getElementById('keyBtn');
+  const keyBanner = document.getElementById('keyBanner');
+  const apiKeyInput = document.getElementById('apiKeyInput');
+  const saveKeyBtn = document.getElementById('saveKeyBtn');
+  const modelBtn = document.getElementById('modelBtn');
+  const modelBanner = document.getElementById('modelBanner');
+  const modelSelect = document.getElementById('modelSelect');
+  const saveModelBtn = document.getElementById('saveModelBtn');
+
+  let history = [];
+  let isSending = false;
+  let apiKey = sessionStorage.getItem('guftagu_api_key') || '';
+  let selectedModel = sessionStorage.getItem('guftagu_model') || 'anthropic/claude-3.5-sonnet';
+
+  // Restore saved values
+  if (apiKey) {
+    apiKeyInput.value = apiKey;
+    keyBanner.style.display = 'none';
+  }
+  modelSelect.value = selectedModel;
+
+  keyBtn.addEventListener('click', () => {
+    keyBanner.style.display = keyBanner.style.display === 'none' ? 'flex' : 'none';
+  });
+
+  modelBtn.addEventListener('click', () => {
+    modelBanner.style.display = modelBanner.style.display === 'none' ? 'flex' : 'none';
+  });
+
+  saveKeyBtn.addEventListener('click', () => {
+    const val = apiKeyInput.value.trim();
+    if (val) {
+      apiKey = val;
+      sessionStorage.setItem('guftagu_api_key', apiKey);
+      keyBanner.style.display = 'none';
+    }
+  });
+
+  saveModelBtn.addEventListener('click', () => {
+    selectedModel = modelSelect.value;
+    sessionStorage.setItem('guftagu_model', selectedModel);
+    modelBanner.style.display = 'none';
+  });
+
+  // Auto-save model on change
+  modelSelect.addEventListener('change', () => {
+    selectedModel = modelSelect.value;
+    sessionStorage.setItem('guftagu_model', selectedModel);
+  });
+
+  function autoResize() {
+    userInput.style.height = 'auto';
+    userInput.style.height = Math.min(userInput.scrollHeight, 140) + 'px';
+  }
+  userInput.addEventListener('input', autoResize);
+
+  userInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  sendBtn.addEventListener('click', sendMessage);
+
+  clearBtn.addEventListener('click', () => {
+    history = [];
+    chatArea.innerHTML = '';
+    chatArea.appendChild(emptyState);
+    emptyState.style.display = 'block';
+  });
+
+  function addBubble(role, text) {
+    emptyState.style.display = 'none';
+    const row = document.createElement('div');
+    row.className = 'row ' + role;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = text;
+    row.appendChild(bubble);
+    chatArea.appendChild(row);
+    chatArea.scrollTop = chatArea.scrollHeight;
+    return bubble;
+  }
+
+  function addTyping() {
+    const row = document.createElement('div');
+    row.className = 'row assistant';
+    row.id = 'typingRow';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble typing';
+    bubble.innerHTML = '<span></span><span></span><span></span>';
+    row.appendChild(bubble);
+    chatArea.appendChild(row);
+    chatArea.scrollTop = chatArea.scrollHeight;
+  }
+
+  function removeTyping() {
+    const row = document.getElementById('typingRow');
+    if (row) row.remove();
+  }
+
+  async function sendMessage() {
+    const text = userInput.value.trim();
+    if (!text || isSending) return;
+
+    if (!apiKey) {
+      keyBanner.style.display = 'flex';
+      addBubble('assistant', 'Pehle upar apni OpenRouter API key daal kar "Save" karein. Free key: https://openrouter.ai/keys');
+      return;
+    }
+
+    isSending = true;
+    sendBtn.disabled = true;
+    userInput.value = '';
+    autoResize();
+
+    addBubble('user', text);
+    history.push({ role: 'user', content: text });
+    addTyping();
+
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + apiKey,
+          "HTTP-Referer": window.location.href,
+          "X-Title": "Guftagu Chatbot"
+        },
+        body: JSON.stringify({
+          model: selectedModel,
+          messages: history,
+          max_tokens: 1000,
+          temperature: 0.7
+        })
+      });
+
+      const data = await response.json();
+      removeTyping();
+
+      if (!response.ok) {
+        let errMsg = 'Unknown error';
+        if (data.error) {
+          errMsg = typeof data.error === 'string' ? data.error : (data.error.message || JSON.stringify(data.error));
+        }
+        addBubble('assistant', 'Error: ' + errMsg);
+        isSending = false;
+        sendBtn.disabled = false;
+        return;
+      }
+
+      const replyText = data.choices?.[0]?.message?.content?.trim() || "Maazrat, jawab nahi mila. Dobara koshish karein.";
+
+      addBubble('assistant', replyText);
+      history.push({ role: 'assistant', content: replyText });
+
+    } catch (err) {
+      removeTyping();
+      addBubble('assistant', 'Kuch ghalat hua. Internet check karein aur dobara koshish karein.');
+      console.error(err);
+    } finally {
+      isSending = false;
+      sendBtn.disabled = false;
+      userInput.focus();
+    }
+  }
+</script>
+
+</body>
+</html>
