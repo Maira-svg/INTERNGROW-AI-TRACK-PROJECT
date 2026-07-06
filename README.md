@@ -1,4 +1,4 @@
-<img width="955" height="537" alt="image" src="https://github.com/user-attachments/assets/78b55f0a-b303-4155-b124-2f6779f22b8e" /># 🎵 AI Track – Pure PHP Version 
+# 🎵 AI Track – Pure PHP Version 
 
 AI Track is a lightweight AI-powered web application built entirely in **PHP**. It does **not require Python**, machine learning frameworks, or additional runtime environments. If you already have **XAMPP** installed, you can run the project immediately.
 
