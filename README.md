@@ -1,4 +1,4 @@
-# 🎵 AI Track – Pure PHP Version 
+<img width="955" height="537" alt="image" src="https://github.com/user-attachments/assets/78b55f0a-b303-4155-b124-2f6779f22b8e" /># 🎵 AI Track – Pure PHP Version 
 
 AI Track is a lightweight AI-powered web application built entirely in **PHP**. It does **not require Python**, machine learning frameworks, or additional runtime environments. If you already have **XAMPP** installed, you can run the project immediately.
 
@@ -283,6 +283,14 @@ Guftagu ek simple aur elegant AI chatbot hai jo **OpenRouter API** ke zariye kaa
 
 
 <img width="955" height="537" alt="image" src="https://github.com/user-attachments/assets/6d4f7b7b-4693-4508-b166-eb0f212e4330" />
+<img width="955" height="537" alt="image" src="https://github.com/user-attachments/assets/114e1d04-e38b-4dd1-90de-11c0f8d0e6ff" /><img width="955" height="537" alt="image" src="https://github.com/user-attachments/assets/b30a2069-9435-460f-9653-f966fae66cc8" />
+<img width="955" height="537" alt="image" src="https://github.com/user-attachments/assets/34923602-a448-42e8-aaa6-ba6a83c5fb69" />
+
+<img width="955" height="537" alt="image" src="https://github.com/user-attachments/assets/7b2d231b-67ee-4782-b5b9-44b55a632981" /><img width="955" height="537" alt="image" src="https://github.com/user-attachments/assets/0e5a11b6-1870-4713-ab30-396b4487ab26" />
+
+
+
+
 
 
 ---
